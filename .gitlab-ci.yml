@@ -2,7 +2,7 @@ pages:
   stage: deploy
   script:
     - if [ ! -d public ]; then mkdir public; fi
-    - cp -r * public/
+    - find . -maxdepth 1 -mindepth 1 -not -name public -exec cp -r {} public/ \;
   artifacts:
     paths:
       - public
