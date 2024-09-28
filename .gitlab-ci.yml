@@ -1,7 +1,7 @@
 pages:
   stage: deploy
   script:
-    - mkdir public
+    - if [ ! -d public ]; then mkdir public; fi
     - cp -r * public/
   artifacts:
     paths:
