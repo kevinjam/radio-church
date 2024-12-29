@@ -7,6 +7,12 @@ deploy_ssl:
   before_script:
     # Install necessary tools (Git, OpenSSL, etc.)
     - apk add --no-cache git openssl
+    # Set up Git user credentials
+    - git config --global user.name "kevinjam"
+    - git config --global user.email "kevin.janvier5@gmail.com"
+    # Ensure the correct branch is checked out
+    - git fetch origin main
+    - git checkout main
   script:
     # Create a directory for the SSL certificate
     - mkdir -p public/ssl
@@ -14,8 +20,6 @@ deploy_ssl:
     - echo "$CF_CERTIFICATE" > public/ssl/cert.pem
     - echo "$CF_PRIVATE_KEY" > public/ssl/key.pem
     # Add the files to the Git repository
-    - git config --global user.name "kevinjam"
-    - git config --global user.email "kevin.janvier5@gmail.com"
     - git add public/ssl/cert.pem public/ssl/key.pem
     - git commit -m "Update SSL certificate"
     - git push origin main
