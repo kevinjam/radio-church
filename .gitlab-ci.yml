@@ -1,19 +1,12 @@
-# pages:
-#   stage: deploy
-#   script:
-#     - if [ ! -d public ]; then mkdir public; fi
-#     - find . -maxdepth 1 -mindepth 1 -not -name public -exec cp -r {} public/ \;
-  # artifacts:
-  #   paths:
-  #     - public
-#   only:
-#     - main  # Or master, depending on your default branch
 stages:
   - deploy
 
 deploy_ssl:
   stage: deploy
   image: alpine:latest
+  before_script:
+    # Install necessary tools (Git, OpenSSL, etc.)
+    - apk add --no-cache git openssl
   script:
     # Create a directory for the SSL certificate
     - mkdir -p public/ssl
@@ -26,11 +19,5 @@ deploy_ssl:
     - git add public/ssl/cert.pem public/ssl/key.pem
     - git commit -m "Update SSL certificate"
     - git push origin main
-
-  artifacts:
-    paths:
-      - public    
   only:
     - main
-
-
