@@ -28,19 +28,15 @@ deploy_ssl_and_static:
     - git fetch origin main
     - git checkout main
   script:
-    # Create a directory for the SSL certificate
     - mkdir -p public/ssl
-    # Save the certificate and key
     - echo "$CF_CERTIFICATE" > public/ssl/cert.pem
     - echo "$CF_PRIVATE_KEY" > public/ssl/key.pem
-    # Preserve any existing files in public/ (like sw.js) and move new static files
-    - mv public public_backup # Backup existing public folder
+    - mv public public_backup
     - mkdir -p public
-    - mv public_backup/ssl public/ # Restore SSL folder
-    - mv public_backup/sw.js public/ 2>/dev/null || true # Restore sw.js if it exists
-    - mv out/* public/ # Move new static files
-    - rm -rf public_backup # Clean up
-    # Add the files to the Git repository
+    - mv public_backup/ssl public/
+    - mv public_backup/sw.js public/ 2>/dev/null || true
+    - if [ -d "out" ] && [ "$(ls -A out)" ]; then mv out/* public/; else echo "out/ directory is empty or does not exist"; exit 1; fi
+    - rm -rf public_backup
     - git add public/
     - git commit -m "Deploy Next.js static site and update SSL certificate"
     - git push origin main
