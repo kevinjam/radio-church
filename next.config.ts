@@ -1,10 +1,8 @@
-// next.config.ts
 import withPWA from "next-pwa";
 import type { NextConfig } from "next";
 
 // Define the base Next.js configuration
 const nextConfig: NextConfig = {
-  // output: "export",
   async headers() {
     return [
       {
@@ -12,11 +10,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: "frame-src 'self' https://chat.radiojar.com",
-          },
-          {
-            key: "Content-Security-Policy",
-            value: "frame-src 'self' https://www.google.com",
+            value: "frame-src 'self' https://chat.radiojar.com https://www.google.com;",
           },
         ],
       },
@@ -37,14 +31,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
-      
       {
         protocol: "https",
         hostname: "chat.radiojar.com",
         port: "",
         pathname: "/**",
       },
-      
       {
         protocol: "http",
         hostname: "localhost",

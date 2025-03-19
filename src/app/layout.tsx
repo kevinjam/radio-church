@@ -5,7 +5,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "LGM Radio",
-  description: "Listen to inspiring Christian podcasts and radio content.",
+  description: "Listen to **LGM Radio**, your home for uplifting sermons, inspiring podcasts, gospel music, and live interactive discussions. Stay connected and be blessed!",
   manifest: "/manifest.json",
 };
 
