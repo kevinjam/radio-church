@@ -11,7 +11,7 @@ build:
     - ls -la
     - ls -la src/app || echo "src/app directory not found"
     - ls -la src/app/* || echo "src/app contents not found"
-    - ls -la out/ || echo "out/ directory not found"
+    - ls -la out/ || (echo "out/ directory not found after next export" && exit 1)
   artifacts:
     paths:
       - out/
