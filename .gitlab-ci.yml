@@ -10,6 +10,7 @@ build:
     - npm run build || (echo "npm run build failed" && exit 1)
     - ls -la
     - ls -la src/app || echo "src/app directory not found"
+    - ls -la src/app/* || echo "src/app contents not found"
     - ls -la out/ || echo "out/ directory not found"
   artifacts:
     paths:
