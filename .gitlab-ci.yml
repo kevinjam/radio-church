@@ -2,13 +2,15 @@ stages:
   - build
   - deploy
 
-# Build stage: Compile the Next.js app and export static files
 build:
   stage: build
   image: node:18-alpine
   script:
     - npm install
-    - npm run build # Includes next export
+    - npm run build || (echo "npm run build failed" && exit 1)
+    - ls -la
+    - ls -la src/app || echo "src/app directory not found"
+    - ls -la out/ || echo "out/ directory not found"
   artifacts:
     paths:
       - out/
@@ -17,7 +19,6 @@ build:
   only:
     - main
 
-# Deploy stage: Move files to public and update SSL certificates
 deploy_ssl_and_static:
   stage: deploy
   image: alpine:latest
