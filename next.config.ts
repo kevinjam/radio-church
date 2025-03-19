@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: "frame-src 'self' https://chat.radiojar.com https://www.google.com;",
+            value: "frame-src 'self' https://chat.radiojar.com https://www.google.com https://www.youtube.com ;",
           },
         ],
       },
