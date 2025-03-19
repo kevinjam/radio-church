@@ -1,5 +1,15 @@
+// next.config.ts
 import withPWA from "next-pwa";
 import type { NextConfig } from "next";
+
+// Validate environment variables at build time
+const requiredEnvVars = ["MONGODB_URI"];
+
+requiredEnvVars.forEach((envVar) => {
+  if (!process.env[envVar]) {
+    throw new Error(`Environment variable ${envVar} is missing`);
+  }
+});
 
 // Define the base Next.js configuration
 const nextConfig: NextConfig = {
@@ -11,6 +21,15 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             value: "frame-src 'self' https://chat.radiojar.com https://www.google.com;",
+          },
+        ],
+      },
+      {
+        source: "/api/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, max-age=0",
           },
         ],
       },
@@ -51,6 +70,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Enable compression for API routes and other responses
+  compress: true,
 };
 
 // Wrap the config with PWA settings

@@ -1,6 +1,8 @@
 // src/app/layout.tsx
 // src/app/layout.tsx
 import type { Metadata } from "next";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -27,6 +29,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* <ErrorBoundary fallback={<div className="text-center p-4 text-red-500">An error occurred. Please refresh the page.</div>}>
           {children}
         </ErrorBoundary> */}
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </body>
     </html>
   );

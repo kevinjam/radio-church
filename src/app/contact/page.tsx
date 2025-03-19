@@ -3,6 +3,7 @@
 
 import { useState, FormEvent } from "react";
 import dynamic from "next/dynamic";
+import { toast } from "react-toastify"; // Import the toast function
 import Footer from "../../components/Footer";
 import UpcomingEvents from "../../components/UpcomingEvents";
 import BottomNav from "../../components/BottomNav";
@@ -14,6 +15,7 @@ export default function Contact() {
   const [message, setMessage] = useState("");
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const Header = dynamic(() => import("../../components/Header"), { ssr: false });
+
   // Handle form submission
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -35,9 +37,27 @@ export default function Contact() {
       setName("");
       setContactInfo("");
       setMessage("");
+      toast.success("🎉 Your message has been sent successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (error) {
       console.error("Error submitting form:", error);
       setFormStatus("error");
+      toast.error("❌ Failed to send your message. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -72,6 +92,7 @@ export default function Contact() {
                   }`}
                   placeholder="Enter your name"
                   required
+                  disabled={formStatus === "submitting"} // Disable input while submitting
                 />
               </div>
 
@@ -92,6 +113,7 @@ export default function Contact() {
                   }`}
                   placeholder="Enter your email or phone number"
                   required
+                  disabled={formStatus === "submitting"} // Disable input while submitting
                 />
               </div>
 
@@ -111,25 +133,53 @@ export default function Contact() {
                   }`}
                   placeholder="Enter your message"
                   required
+                  disabled={formStatus === "submitting"} // Disable input while submitting
                 />
               </div>
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={formStatus === "submitting"}
-                className={`w-full py-3 rounded-lg font-medium transition-colors ${
-                  formStatus === "submitting"
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-green-900 hover:bg-green-600 text-white"
-                }`}
-              >
-                {formStatus === "submitting" ? "Submitting..." : "Submit"}
-              </button>
+              {/* Submit Button with Progress Indicator */}
+              <div className="relative">
+                <button
+                  type="submit"
+                  disabled={formStatus === "submitting"}
+                  className={`w-full py-3 rounded-lg font-medium transition-colors ${
+                    formStatus === "submitting"
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-green-900 hover:bg-green-600 text-white"
+                  }`}
+                >
+                  {formStatus === "submitting" ? "Please wait..." : "Submit"}
+                </button>
+                {formStatus === "submitting" && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
 
-              {/* Form Status Messages */}
+              {/* Form Status Messages (Optional, since we're using toasts) */}
+              {/* You can remove these if you prefer to rely solely on toasts */}
               {formStatus === "success" && (
-                <p className="text-green-500 text-center">Message sent successfully!</p>
+                <p className="text-white text-center">Message sent successfully!</p>
               )}
               {formStatus === "error" && (
                 <p className="text-red-500 text-center">Failed to send message. Please try again.</p>
