@@ -1,16 +1,30 @@
 stages:
+  - build
   - deploy
 
-deploy_ssl:
+# Build stage: Compile the Next.js app and export static files
+build:
+  stage: build
+  image: node:18-alpine
+  script:
+    - npm install
+    - npm run build # Includes next export
+  artifacts:
+    paths:
+      - out/
+      - public/
+    expire_in: 1 hour
+  only:
+    - main
+
+# Deploy stage: Move files to public and update SSL certificates
+deploy_ssl_and_static:
   stage: deploy
   image: alpine:latest
   before_script:
-    # Install necessary tools (Git, OpenSSL, etc.)
     - apk add --no-cache git openssl
-    # Set up Git user credentials
     - git config --global user.name "kevinjam"
     - git config --global user.email "kevin.janvier5@gmail.com"
-    # Ensure the correct branch is checked out
     - git fetch origin main
     - git checkout main
   script:
@@ -19,9 +33,20 @@ deploy_ssl:
     # Save the certificate and key
     - echo "$CF_CERTIFICATE" > public/ssl/cert.pem
     - echo "$CF_PRIVATE_KEY" > public/ssl/key.pem
+    # Preserve any existing files in public/ (like sw.js) and move new static files
+    - mv public public_backup # Backup existing public folder
+    - mkdir -p public
+    - mv public_backup/ssl public/ # Restore SSL folder
+    - mv public_backup/sw.js public/ 2>/dev/null || true # Restore sw.js if it exists
+    - mv out/* public/ # Move new static files
+    - rm -rf public_backup # Clean up
     # Add the files to the Git repository
-    - git add public/ssl/cert.pem public/ssl/key.pem
-    - git commit -m "Update SSL certificate"
+    - git add public/
+    - git commit -m "Deploy Next.js static site and update SSL certificate"
     - git push origin main
+  dependencies:
+    - build
   only:
     - main
+  environment:
+    name: production
