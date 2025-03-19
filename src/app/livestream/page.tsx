@@ -22,7 +22,7 @@ export default function Livestream() {
   // Replace with a livestream video ID if available (e.g., from a scheduled livestream)
   // For now, we'll use a placeholder video ID or a specific video from the channel
   const videoId = "BlXCX1rz9Wo"; // Example video ID from Glory Marie Ministries (from web ID: 9)
-  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=0`;
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
 
   return (
     <div className={`min-h-screen flex flex-col ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-800"}`}>
